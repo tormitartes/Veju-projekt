@@ -1,6 +1,6 @@
 Mida plaanime kasutada:
 
-Plotly graafikute jaoks
+matplotlib graafikute jaoks
 
 tkinter (+ customtkinter) kasutajaliidese loomise jaoks
 
