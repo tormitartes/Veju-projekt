@@ -1,3 +1,11 @@
+# KOOLI (ja tagasi) KÄIMISE KALKULAATOR
+# Vastavalt meetodile arvutab välja kui palju raha ja aega kulub, et ühel päeval koolis käia
+# Annab nii sulaselged numbrid kui ka graafiku, võrdlemaks erinevaid meetodeid
+# Käivitamiseks vajuta vaid Start/Run program nuppu!
+# PS! Lae vajalikud teegid kindlasti alla!
+# Loojad: Tormi Tartes, Mattias Reimand | Tartu Ülikool 2025
+
+# --- Teekide kasutamine ---
 # UI impordid
 import customtkinter as ctk
 
@@ -15,17 +23,12 @@ def tagasi_vajutus(aken):
     aken.destroy()
     avaaken()
 
-# Jäi kasutamata, ei oska rakendada
-def aknavahetus(vana, uus):
-    vana.destroy()
-    uus.tkraise()
-
 # Nupuvajutusel programm sulgeb
 def programm_kinni(akna_nimi):
     print("Programm lõpetamisel...")
     akna_nimi.destroy()
 
-# Auto/bussi sisendite sisse/välja lülitamine vastavalt raqdio-valikule
+# Auto/bussi sisendite sisse/välja lülitamine vastavalt raadionuppude-valikule
 def uuenda_sisendite_olek():
     
     aktiivne_värv = "#211d45"
@@ -58,13 +61,14 @@ def uuenda_sisendite_olek():
 def Genereerimise_nupp():
     print("Gen-nupp vajutatud!")
     print(f"Valitud meetodi number: {valitu.get()}.")
-    main() # Arvutamine tõstetud main funktsiooni sisse
+    main() # Vastuste kuvamine tõstetud main funktsiooni sisse
     
 
 # Akna sätted
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("dark-blue") # Valikud: "blue" , "dark-blue" and "green"
 
+# Akna nimi on katsetamise aegadest jäänud test, kuid seda mujal välja ei paista
 test = ctk.CTk()
 test.title("Summaator")
 test.geometry("800x700")
@@ -74,7 +78,7 @@ test.geometry("800x700")
 def avaaken():
     esileht = ctk.CTkFrame(test)
     esileht.pack(fill="both", expand=True)
-    # .pack käitub erinevalt kui grid, kuid siin saab sellega veel hakkama
+    # .pack käitub erinevalt kui grid, kuid siin lehel saab sellega veel hakkama
 
     tekst = ctk.CTkLabel(
         esileht,
@@ -128,7 +132,7 @@ def avaaken():
 # --- Arvutusakna asjad ---
 def arvutusaken():
     # Siin .grid süsteem kasutusel. 
-    # Mõned muutujad peavad olema globaalsed, et neid väljastpoolt saaks muuta
+    # Mõned muutujad peavad olema globaalsed, et neid väljastpoolt saaks muuta/näha
     global distants_sisend
     global valitu
     global arvutus
@@ -139,7 +143,7 @@ def arvutusaken():
     global bussipilet_sisend
     global bussiaeg_sisend
     
-    # Sisendite värvid
+    # Sisendite värvid vastavalt olekule
     aktiivne_värv = "#211d45"
     ebaaktiivne = "#2e101a"
     checkbox_värv = "#949a9f"
@@ -153,7 +157,6 @@ def arvutusaken():
     arvutus.grid(row=5, column=5, sticky="nsew")
     arvutus.grid_columnconfigure(0, weight=1)
     arvutus.grid_rowconfigure(7, weight=1) # Alumine tekst võtab ülejäänud vaba ruumi enda alla
-
     # Püha jumal need grid-id ja frame-id on segased asjad
 
     # Navigeerimisnuppude kood
@@ -181,6 +184,7 @@ def arvutusaken():
         command= lambda: programm_kinni(test))
     sulge_nupp.grid(row=0, column=1, sticky="e")
 
+
     # Elemendi ülesseadmine 
     Vali_meetod = ctk.CTkLabel(
         arvutus,
@@ -192,6 +196,7 @@ def arvutusaken():
     Vali_meetod.grid(row=1, column=0, padx=20, pady=10)
     #Kuna ta on ainus element siin reas, siis talle ei tee eraldi raami
 
+
     # Raadionupud
     valikud = ctk.CTkFrame(
         arvutus,
@@ -202,7 +207,6 @@ def arvutusaken():
     # Valitud meetodi väärtus, vaikimisi 0 (auto)
     valitu = ctk.IntVar(value=0)
     
-
     # Valikute nuppude loomine ja asetamine
     meetodid = ["Auto", "Buss", "Jalgsi", "Renditõuks", "Takso", "Oma ratas"]
     for i, meetod in enumerate(meetodid): # i on järjekorranumber
@@ -302,7 +306,7 @@ def arvutusaken():
         )
     bussipilet_tekst.grid(row=6, column=0, padx=5, pady=5)
     
-    pilet_olek=ctk.BooleanVar()
+    pilet_olek=ctk.BooleanVar() # Annab kas False või True
     bussipilet_sisend = ctk.CTkCheckBox(
         sisendid,
         text="Olemas?",
@@ -326,8 +330,9 @@ def arvutusaken():
         )
     bussiaeg_sisend.grid(row=7, column=1, padx=5, pady=5)
     
-    # kastide deaktiveerimise osa
+    # kastide deaktiveerimise osa, programmi käivitades vaja korra jooksutada
     uuenda_sisendite_olek()
+
 
     # Tulemuste genereerimise nupp
     gen_nupp = ctk.CTkButton(
@@ -338,6 +343,7 @@ def arvutusaken():
         )
     gen_nupp.grid(row=5, column=0, padx=20, pady=(20, 10))
     
+
     # --- Tulemuste kuvamine ---
     tulemused = ctk.CTkFrame(
         arvutus,
@@ -379,7 +385,7 @@ def arvutusaken():
         )
     ajaline_summa.grid(row=1, column=1, padx=10, pady=10, sticky="w")
     
-    # Programmi katsematisel kasutatud element, nüüd kasutatud hoiatusena
+    # Programmi katsetamisel kasutatud element, nüüd kasutatud hoiatusena
     debug = ctk.CTkFrame(
         arvutus,
         fg_color="gray9",
@@ -393,7 +399,7 @@ def arvutusaken():
         debug,
         text="""Tähelepanu! Tulemusi arvutatakse edasi-tagasi käiku arvestades.
 Programmi algoritmid ei pruugi olla täpsed, kasuta omal vastutusel.
-Loojad ei hüvita vigaseid summasid.""",
+Loojad ei hüvita ebatäpsetest summadest tulenevaid kulutusi.""",
         font=ctk.CTkFont(size=12)
         )
     bugtext.grid(row=0, column=0)
@@ -402,9 +408,9 @@ Loojad ei hüvita vigaseid summasid.""",
     # muidu kasutuses oleva teksti kätte
     """Tähelepanu! Tulemusi arvutatakse edasi-tagasi käiku arvestades.
 Programmi algoritmid ei pruugi olla täpsed, kasuta omal vastutusel.
-Loojad ei hüvita vigaseid summasid."""
+Loojad ei hüvita ebatäpsetest summadest tulenevaid kulutusi."""
 
-# Graafiku, põhiprogramm järgmisena
+# Graafiku-, põhiprogramm järgmisena
 #Mõned asjad muudetud, et töötaks kasutajaliidesega
 
 # ----- KONSTANDID (hinnad ja kiirused) -----
@@ -424,14 +430,14 @@ BOLT_AVAMINE = 0.20
 BOLT_MINUT = 0.24     # hinnad Boltist võetud
 
 TAKSO_START = 2.00
-TAKSO_KM = 0.90       # väga üldistatud hinnad, vajavad verifitseerimist
+TAKSO_KM = 0.90       # väga üldistatud hinnad
 TAKSO_MINUT = 0.20 
 
 # ----- GRAAFIKU KONSTANDID (varieeruvus) -----
 
 AUTO_KÜTUSEKULU_VAIKIMISI = 8.0
 BUSSIPILET_KESKMINE = 1.25
-BUSSI_KIIRUS = 25  # km/h (kui buss pole valitud, arvutame aja distantsi järgi)
+BUSSI_KIIRUS = 25  # km/h (kui buss pole valitud, arvutab aja distantsi järgi)
 
 # ----- ABIFUNKTSIOONID (sisendi küsimine) -----
 
@@ -466,8 +472,8 @@ def küsi_int_vahemikus(küsimus, min_v, max_v):  # kasutatakse transpordivaliku
 
 def auto_kulu(distants_km, kütusekulu_l_100km):  
     try:
-        kütuse_hind = kütusväärtus.get()
         #bugtext.configure(text=f"{kütusväärtus.get()}")
+        kütuse_hind = kütusväärtus.get()
     except:
         kütuse_hind = KÜTUSEHIND # KÜTUSEHIND = 1.5
 
@@ -658,10 +664,9 @@ def main():
         buss_aeg_üks_ots = None
         
         
-        
         distants_km = float(distants_sisend.get())
 
-        valik = valitu.get() + 1
+        valik = valitu.get() + 1 # Kuna valitu algab 0, aga meetodid algavad 1
 
         raha_päevas = 0.0
         aeg_päevas = 0
